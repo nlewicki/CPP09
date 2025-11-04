@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 10:35:29 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/04 13:19:38 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/04 13:27:25 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,11 @@ void BitcoinExchange::processInputFile(const std::string& filename) const
     }
 
     std::string line;
-    while (checkInput(const std::getline(file, line)))
+    std::getline(file, line);
+    while (std::getline(file, line))
     {
-        // Process each line
+        if (!checkInput(line)) 
+            continue;
+        float value = getExchangeRate(); // get value from map
     }
 }
