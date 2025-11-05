@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 10:35:35 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/04 13:17:36 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/05 08:12:31 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ int main(int argc, char** argv)
     BitcoinExchange bitcoinExchange;
 
     bitcoinExchange.loadData("data.csv");
-    bitcoinExchange.printData();
+    // bitcoinExchange.printData();
     bitcoinExchange.processInputFile(argv[1]);
 
     return 0;
