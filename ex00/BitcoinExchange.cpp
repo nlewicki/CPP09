@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 10:35:29 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/05 09:02:40 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/05 09:16:23 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ BitcoinExchange::~BitcoinExchange()
 static std::string trim(const std::string& s) {
     std::string::size_type a = s.find_first_not_of(" \t");
     std::string::size_type b = s.find_last_not_of(" \t");
-    if (a == std::string::npos) return "";
+    if (a == std::string::npos) return ""; // npos means string is all whitespace (= not found)
     return s.substr(a, b - a + 1);
 }
 
@@ -89,7 +89,7 @@ void BitcoinExchange::printSolution(const std::string& line, float rate) const
 
 void BitcoinExchange::processInputFile(const std::string& filename) const
 {
-    std::ifstream file(filename.c_str());
+    std::ifstream file(filename.c_str()); // open input file (c_str() to convert string to const char*)
     if (!file.is_open())
     {
         std::cerr << "Could not open input file." << std::endl;
@@ -159,7 +159,7 @@ bool BitcoinExchange::checkInput(const std::string& line) const
     if (std::getline(ss, date, '|') && (ss >> value))
     {
         date = trim(date);
-        // Validate date format YYYY-MM-DD
+        // Validate date format
         if (date.size() != 10 || date[4] != '-' || date[7] != '-')
         {
             std::cerr << "Error: bad date input => " << line << std::endl;
@@ -169,24 +169,28 @@ bool BitcoinExchange::checkInput(const std::string& line) const
         int month = std::atoi(date.substr(5, 2).c_str());
         int day = std::atoi(date.substr(8, 2).c_str());
 
+        // validate month and day ranges
         if (month < 1 || month > 12 || day < 1 || day > 31)
         {
             std::cerr << "Error: bad month/day input => " << line << std::endl;
             return false;
         }
 
+        // check for February
         if (month == 2 && day > 29)
         {
             std::cerr << "Error: bad day input for February => " << line << std::endl;
             return false;
         }
         
+        // check for months with 30 days
         if ((month == 4 || month == 6 || month == 9 || month == 11) && day > 30)
         {
                 std::cerr << "Error: bad day input for month => " << line << std::endl;
                 return false;
         }
-
+        
+        // check for limits of data.csv
         if (year < 2009 || year > 2022)
         {
             std::cerr << "Error: before/after limits of data.csv => " << line << std::endl;
@@ -201,6 +205,7 @@ bool BitcoinExchange::checkInput(const std::string& line) const
             return false;
         }
 
+        // validate value range
         if (value < 0)
         {
             std::cerr << "Error: not a positive number." << std::endl;
