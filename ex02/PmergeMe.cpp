@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 10:04:30 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/11 10:27:13 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:04:02 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,17 +100,17 @@ std::deque<int> PmergeMe::getDeque() const
 void PmergeMe::exec()
 {
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    std::sort(_vector.begin(), _vector.end());
+    _vector = sort_vector(_vector);
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::micro> duration_vec = end - start;
 
-    start = std::chrono::high_resolution_clock::now();
-    std::sort(_deque.begin(), _deque.end());
-    end = std::chrono::high_resolution_clock::now();
-    std::chrono::duration<double, std::micro> duration_deq = end - start;
+    // start = std::chrono::high_resolution_clock::now();
+    // std::sort(_deque.begin(), _deque.end());
+    // end = std::chrono::high_resolution_clock::now();
+    // std::chrono::duration<double, std::micro> duration_deq = end - start;
     
     Display("After: ", _vector);
     std::cout << "Time to process a range of " << _vector.size() << " elements with std::vector : " << std::fixed << duration_vec.count() << " µs" << std::endl;
-    std::cout << "Time to process a range of " << _deque.size() << " elements with std::deque  : " << std::fixed << duration_deq.count() << " µs" << std::endl;
+    // std::cout << "Time to process a range of " << _deque.size() << " elements with std::deque  : " << std::fixed << duration_deq.count() << " µs" << std::endl;
 }
 

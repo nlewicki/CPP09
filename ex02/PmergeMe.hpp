@@ -27,8 +27,8 @@ class PmergeMe
         void parseInput(int argc, char* argv[]);
         bool isValidNumber(const std::string& str) const;
         void exec();
-        std::vector<int> sort_vector(std::vector<int>& vec);
-        std::deque<int> sort_deque(std::deque<int>& deq);
+        std::vector<int> sort_vector(std::vector<int>& input);
+        std::deque<int> sort_deque(std::deque<int>& input);
 };
 
 template<typename T>
@@ -43,6 +43,32 @@ void Display(const std::string& message, T container)
     }
     std::cout << *it;
     std::cout << std::endl;
+}
+
+template<typename T>
+void DDisplay(const std::string& message, T container)
+{
+    #ifdef DEBUG
+    std::cout << message;
+    if constexpr (std::is_same<typename T::value_type, std::pair<int, int>>::value)
+    {
+        for (const auto& pair : container)
+            std::cout << "(" << pair.first << ", " << pair.second << ") ";
+    }
+    else
+    {
+        typename T::iterator it = container.begin();
+        while (it != container.end() - 1)
+        {
+            std::cout << *it << " ";
+            ++it;
+        }
+        std::cout << *it;
+    }
+    std::cout << "\n" << std::endl;
+    #endif
+    (void)message;
+    (void)container;
 }
 
 

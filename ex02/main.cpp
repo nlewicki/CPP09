@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 10:04:11 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/11 10:15:05 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/12 09:03:10 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,8 @@ int main(int argc, char* argv[])
     try
     {
         sorter.parseInput(argc, argv);
-        Display("Vector before sorting: ", sorter.getVector());
-        Display("Deque before sorting: ", sorter.getDeque());
+        DDisplay("Vector before sorting: ", sorter.getVector());
+        DDisplay("Deque before sorting: ", sorter.getDeque());
         sorter.exec();
     }
     catch(const std::exception& e)
