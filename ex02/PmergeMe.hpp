@@ -8,6 +8,8 @@
 #include <climits>
 #include <algorithm>
 #include <chrono>
+#include <iostream>
+#include <string>
 
 
 class PmergeMe
@@ -22,14 +24,14 @@ class PmergeMe
         PmergeMe& operator=(const PmergeMe& source) = delete;
         ~PmergeMe();
 
-        std::vector<int> getVector() const;
-        std::deque<int> getDeque() const;
         void parseInput(int argc, char* argv[]);
         bool isValidNumber(const std::string& str) const;
         void exec();
-        std::vector<int> sort_vector(std::vector<int>& input);
-        std::deque<int> sort_deque(std::deque<int>& input);
+        void sort_vector();
+        void sort_deque();
 };
+
+void DDisplay_txt(const std::string& message);
 
 template<typename T>
 void Display(const std::string& message, T container)

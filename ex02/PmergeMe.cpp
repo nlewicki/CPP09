@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 10:04:30 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/12 09:04:02 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/12 13:46:02 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@ PmergeMe::PmergeMe()
 PmergeMe::~PmergeMe()
 {
     
+}
+
+void DDisplay_txt(const std::string& message)
+{
+    #ifdef DEBUG
+    std::cout << message << std::endl;
+    #endif
+    (void)message;
 }
 
 bool PmergeMe::isValidNumber(const std::string& str) const
@@ -56,15 +64,16 @@ void PmergeMe::parseInput(int argc, char* argv[])
 
         while (iss >> token)
         {
+            // Check if token is a valid number
             if (!isValidNumber(token))
                 throw std::runtime_error("Error: Invalid number '" + token + "'.");  
 
             char* end = 0;
             long num = std::strtol(token.c_str(), &end, 10);
-            
+            // Check for conversion errors
             if (*end != '\0')  
                 throw std::runtime_error("Error: Invalid number '" + token + "'.");
-                
+            // Check for range of int
             if (num < 0 || num > INT_MAX)  
                 throw std::runtime_error("Error: Number out of range '" + token + "'.");
             
@@ -85,32 +94,23 @@ void PmergeMe::parseInput(int argc, char* argv[])
     Display("Before: ", _vector);
 }
 
-
-
-std::vector<int> PmergeMe::getVector() const
-{
-    return _vector;
-}
-
-std::deque<int> PmergeMe::getDeque() const
-{
-    return _deque;
-}
-
 void PmergeMe::exec()
 {
+    DDisplay("Vector before sorting: ", _vector);
+    DDisplay("Deque before sorting: ", _deque);
+    
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
-    _vector = sort_vector(_vector);
+    sort_vector();
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::micro> duration_vec = end - start;
 
-    // start = std::chrono::high_resolution_clock::now();
-    // std::sort(_deque.begin(), _deque.end());
-    // end = std::chrono::high_resolution_clock::now();
-    // std::chrono::duration<double, std::micro> duration_deq = end - start;
+    start = std::chrono::high_resolution_clock::now();
+    sort_deque();
+    end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::micro> duration_deq = end - start;
     
     Display("After: ", _vector);
     std::cout << "Time to process a range of " << _vector.size() << " elements with std::vector : " << std::fixed << duration_vec.count() << " µs" << std::endl;
-    // std::cout << "Time to process a range of " << _deque.size() << " elements with std::deque  : " << std::fixed << duration_deq.count() << " µs" << std::endl;
+    std::cout << "Time to process a range of " << _deque.size() << " elements with std::deque  : " << std::fixed << duration_deq.count() << " µs" << std::endl;
 }
 

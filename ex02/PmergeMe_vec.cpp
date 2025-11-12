@@ -6,13 +6,15 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 09:55:48 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/12 09:41:45 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/12 13:49:16 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
-void  merge(std::vector<std::pair<int, int>>& pairs, int start, int end, int middle)
+
+// sort pair by the second element
+static void  merge(std::vector<std::pair<int, int>>& pairs, int start, int end, int middle)
 {
     int n1 = middle - start + 1;
     int n2 = end - middle;
@@ -24,34 +26,36 @@ void  merge(std::vector<std::pair<int, int>>& pairs, int start, int end, int mid
     int j = 0;
     int k = start;
 
-    while (i < n1 && j < n2)
+    while (i < n1 && j < n2) // while both subarrays have elements
     {
-        if (left[i].second <= right[j].second)
-            pairs[k++] = left[i++];
+        if (left[i].second <= right[j].second) // compare by second element if left is smaller or equal
+            pairs[k++] = left[i++]; // take from left 
         else
-            pairs[k++] = right[j++];
+            pairs[k++] = right[j++]; // take from right
     }
     
-    while (i < n1)
-        pairs[k++] = left[i++];
-    while (j < n2)
-        pairs[k++] = right[j++];
+    while (i < n1) // remaining elements in left
+        pairs[k++] = left[i++]; // take from left
+    while (j < n2) // remaining elements in right
+        pairs[k++] = right[j++]; // take from right
 }
 
-void merge_sort(std::vector<std::pair<int, int>>& pairs, int start, int end)
+static void merge_sort(std::vector<std::pair<int, int>>& pairs, int start, int end)
 {
     if (start < end)
     {
         int middle = start + (end - start) / 2;
+        // sort left/right half recursively
         merge_sort(pairs, start, middle);
         merge_sort(pairs, middle + 1, end);
+        // merge sorted pairs
         merge(pairs, start, end, middle);
     }
 }
 
 // Insert val into main using binary search up to iterator R
 // -> given order search in vector up to pair.second elements and insert
-void binary_insert(std::vector<int>& main, const int val, std::vector<int>::iterator R)
+static void binary_insert(std::vector<int>& main, const int val, std::vector<int>::iterator R)
 {
     std::vector<int>::iterator L = main.begin();
 
@@ -66,7 +70,7 @@ void binary_insert(std::vector<int>& main, const int val, std::vector<int>::iter
     main.insert(L, val);
 }
 
-std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
+static std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
 {
     std::vector<int> order;
 
@@ -81,7 +85,7 @@ std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
     
     while (jacobsthal.size() >= 2 && jacobsthal.back() < total_b)
     {
-        int next = 2 * jacobsthal[jacobsthal.size() - 1] + jacobsthal.back();
+        int next = 2 * jacobsthal[jacobsthal.size() - 2] + jacobsthal.back();
         jacobsthal.push_back(next);
     }
 
@@ -112,7 +116,7 @@ std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
 }
 
 
-void insertion_sort(std::vector<int> &main,
+static void insertion_sort(std::vector<int> &main,
                     const std::vector<std::pair<int, int> > &pairs,
                     int rest)
 {
@@ -122,7 +126,7 @@ void insertion_sort(std::vector<int> &main,
     int num_pairs = static_cast<int>(pairs.size());
     bool has_rest = (rest != -1);
 
-    std::vector<int> insertion_order = get_insertion_order(num_pairs, has_rest);
+    std::vector<int> insertion_order = get_insertion_order(num_pairs, has_rest); // bsp order 3 2 4 => heist erst b3, dann b2, dann b4
     DDisplay("insertion order (b_j indices): ", insertion_order);
 
     bool rest_inserted = false;
@@ -131,52 +135,38 @@ void insertion_sort(std::vector<int> &main,
     {
         int j = insertion_order[idx];
 
-        // b_j gehört zu einem Paar
         if (j >= 2 && j <= num_pairs)
         {
-            const std::pair<int, int> &p = pairs[j - 1]; // j ist 1-basiert
+            const std::pair<int, int> &p = pairs[j - 1];
             std::vector<int>::iterator R =
-                std::find(main.begin(), main.end(), p.second); // Position von a_j
-            if (R == main.end())
-            {
-                // Sollte nicht passieren, aber falls doch: als Fallback ans Ende suchen
-                R = main.end();
-            }
-            binary_insert(main, p.first, R);
+                std::find(main.begin(), main.end(), p.second);
+            binary_insert(main, p.first, R); // zahl einfuegen
         }
-        // b_{num_pairs+1} repräsentiert das Rest-Element
-        else if (has_rest && j == num_pairs + 1 && !rest_inserted)
+        else if (has_rest && j == num_pairs + 1 && !rest_inserted) // rest einfuegen falls vorhanden
         {
             binary_insert(main, rest, main.end());
             rest_inserted = true;
-            std::cout << "insert odd element via sequence\n";
+            DDisplay_txt("Inserted odd element");
         }
-    }
-
-    // Falls rest aus irgendeinem Grund nicht in der Folge vorkam hinten einsortieren
-    if (has_rest && !rest_inserted)
-    {
-        binary_insert(main, rest, main.end());
-        std::cout << "inserted odd element at the end (fallback)\n";
     }
 }
 
 
-std::vector<int> PmergeMe::sort_vector(std::vector<int>& input)
+void PmergeMe::sort_vector()
 {
     std::vector<std::pair<int, int> > pairs;
     std::vector<int> main;
     int rest = -1;
 
-    if (input.size() % 2 != 0)
-        rest = input.back();
+    if (_vector.size() % 2 != 0)
+        rest = _vector.back();
     
-    std::cout << "rest: " << rest << std::endl;
+    // std::cout << "rest: " << rest << std::endl;
     //build pairs and sort each pair
-    for (size_t i = 0; i + 1 < input.size(); i += 2)
+    for (size_t i = 0; i + 1 < _vector.size(); i += 2)
     {
-        int x = input[i];
-        int y = input[i + 1];
+        int x = _vector[i];
+        int y = _vector[i + 1];
         if (x > y)
             std::swap(x, y);
         pairs.push_back(std::make_pair(x, y));
@@ -202,6 +192,5 @@ std::vector<int> PmergeMe::sort_vector(std::vector<int>& input)
     else if (rest != -1)
         main.push_back(rest);
         
-    _vector = main;
-    return main;
+    _vector.swap(main);
 }
