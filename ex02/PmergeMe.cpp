@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 10:04:30 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/12 13:46:02 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/14 08:59:34 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,26 @@ void DDisplay_txt(const std::string& message)
     std::cout << message << std::endl;
     #endif
     (void)message;
+}
+
+template <typename T>
+void check_sorted(const T& c, const char* name)
+{
+    #ifdef DEBUG
+    for (typename T::size_type i = 1; i < c.size(); ++i)
+    {
+        if (c[i - 1] > c[i])
+        {
+            std::cerr << name << " NOT sorted at index "
+                      << (i - 1) << " -> " << i
+                      << " (" << c[i - 1] << " > " << c[i] << ")\n";
+            return;
+        }
+    }
+    std::cout << name << " sorted ✅\n";
+    #endif
+    (void)c;
+    (void)name;
 }
 
 bool PmergeMe::isValidNumber(const std::string& str) const
@@ -101,11 +121,13 @@ void PmergeMe::exec()
     
     std::chrono::high_resolution_clock::time_point start = std::chrono::high_resolution_clock::now();
     sort_vector();
+    check_sorted(_vector, "vector");
     std::chrono::high_resolution_clock::time_point end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::micro> duration_vec = end - start;
 
     start = std::chrono::high_resolution_clock::now();
     sort_deque();
+    check_sorted(_deque,  "deque");
     end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::micro> duration_deq = end - start;
     

@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/11 09:55:48 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/12 13:49:16 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/14 08:50:45 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ static std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
 {
     std::vector<int> order;
 
+    // jacobsthal bekommen -> bis nicht mehr groeser geht
     const int total_b = num_pairs + (has_rest ? 1 : 0);
     if (total_b <= 1)
         return order;
@@ -89,8 +90,10 @@ static std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
         jacobsthal.push_back(next);
     }
 
+    //bei 1 anfangen
     int prev = 1;
     
+    // bis letzte b checken (-> 3,2 -> 5,4 -> 11, 10, 9... bis current == total_b)
     for (size_t k = 1; k < jacobsthal.size(); k++)
     {
         int current = jacobsthal[k];
@@ -107,6 +110,7 @@ static std::vector<int> get_insertion_order(int num_pairs, bool has_rest)
         prev = jacobsthal[k];
     }
 
+    // falls total_b 2, dann jacobsthal = 1, faellt hier rein
     if (prev < total_b)
     {
         for (int bj = total_b; bj > prev && bj >= 2; --bj)
