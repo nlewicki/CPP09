@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/04 10:35:33 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/05 09:03:42 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/14 09:07:55 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class BitcoinExchange
         
 
         void loadData(const std::string& filename); // load csv data into _data map
-        void printData() const; // for debugging purposes
+        void printData() const; // debugging
         void printSolution(const std::string& line, float rate) const;
         bool checkInput(const std::string& line) const; // loop(checkInput) -> if true, get rate -> if false, error msg(which is in checkInput) and dont go in get rate. next line
         float getExchangeRate(const std::string& line) const; // get rate from _data map -> if date not found, find closest previous date

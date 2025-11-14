@@ -6,7 +6,7 @@
 /*   By: nlewicki <nlewicki@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 09:16:29 by nlewicki          #+#    #+#             */
-/*   Updated: 2025/11/06 09:53:01 by nlewicki         ###   ########.fr       */
+/*   Updated: 2025/11/14 09:06:30 by nlewicki         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,8 @@ int RPN::evaluate(const std::string& expression)
         else if (token.size() == 1 && (token[0] == '+' || token[0] == '-' || token[0] == '*' || token[0] == '/'))
         {
             if (stack.size() < 2) throw std::runtime_error("not enough operands");
-            int rhs = stack.top();
-            stack.pop(); // loescht nur den obersten Wert
+            int rhs = stack.top(); // holt den obersten Wert
+            stack.pop(); // loescht nur obersten Wert
             int lhs = stack.top();
             stack.pop();
             stack.push(performOperation(lhs, rhs, token[0]));

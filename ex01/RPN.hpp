@@ -9,7 +9,7 @@
 
 class RPN {
     private:
-        std::stack<int> _operand; // stack = LIFO structure (operand = numbers involved in the calculations)
+        std::stack<int> _operand;
 
     public:
         RPN();
